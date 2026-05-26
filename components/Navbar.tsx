@@ -13,19 +13,10 @@ export function Navbar() {
   const t = useTranslations("Navigation");
   const pathname = usePathname();
   const { data: session } = useSession();
-  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Close menus on outside click
   useEffect(() => {
@@ -51,18 +42,8 @@ export function Navbar() {
     { href: "/aktivitas", label: t("aktivitas") },
   ];
 
-  const isTransparentBase =
-    pathname === "/villa" ||
-    // pathname === "/hotel-cabin" ||
-    // pathname === "/jeep" ||
-    pathname === "/aktivitas";
-  const navBgClass =
-    isScrolled || !isTransparentBase
-      ? "bg-primary-light/80 backdrop-blur-md shadow-sm border-b border-neutral-200"
-      : "bg-transparent";
-
-  const textColorClass =
-    isScrolled || !isTransparentBase ? "text-neutral-800" : "text-white";
+  const navBgClass = "bg-white/95 backdrop-blur-md shadow-sm border-b border-neutral-200";
+  const textColorClass = "text-neutral-800";
 
   const userInitial = session?.user?.name?.[0]?.toUpperCase() || "U";
 
@@ -93,9 +74,7 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={`text-sm font-medium transition-colors hover:opacity-70 ${isActive
-                    ? isScrolled || !isTransparentBase
-                      ? "text-primary font-bold"
-                      : "text-white font-bold"
+                    ? "text-primary font-bold"
                     : textColorClass
                   }`}
               >
@@ -111,10 +90,7 @@ export function Navbar() {
 
           <Link
             href="/daftar-tuan-rumah"
-            className={`text-sm font-bold px-4 py-2 rounded-xl transition-all border ${isScrolled || !isTransparentBase
-                ? "border-primary text-primary hover:bg-primary hover:text-white"
-                : "border-white text-white hover:bg-white hover:text-primary"
-              }`}
+            className="text-sm font-bold px-4 py-2 rounded-xl transition-all border border-primary text-primary hover:bg-primary hover:text-white"
           >
             {t("host_registration")}
           </Link>
@@ -130,13 +106,13 @@ export function Navbar() {
                   {userInitial}
                 </span>
                 <span
-                  className={`max-w-[100px] truncate ${isScrolled || !isTransparentBase ? "text-foreground" : "text-white"}`}
+                  className="max-w-[100px] truncate text-foreground"
                 >
                   {session.user.name?.split(" ")[0] || "User"}
                 </span>
                 <ChevronDown
                   size={14}
-                  className={`transition-transform ${userMenuOpen ? "rotate-180" : ""} ${isScrolled || !isTransparentBase ? "text-neutral-500" : "text-white/70"}`}
+                  className={`transition-transform ${userMenuOpen ? "rotate-180" : ""} text-neutral-500`}
                 />
               </button>
 
@@ -200,7 +176,7 @@ export function Navbar() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="absolute top-16 left-0 w-full bg-primary-light shadow-xl border-t border-neutral-100 p-4 md:hidden flex flex-col gap-4">
+        <div className="absolute top-16 left-0 w-full bg-white shadow-xl border-t border-neutral-100 p-4 md:hidden flex flex-col gap-4">
           {navLinks.map((link) => (
             <Link
               key={link.href}

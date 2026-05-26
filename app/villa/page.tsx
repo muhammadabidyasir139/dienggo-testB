@@ -102,7 +102,7 @@ export default async function VillaListingPage({
           </div>
         </div>
 
-        <div className="mt-12">
+        <div id="villa-list-section" className="mt-12 scroll-mt-24">
           <h2 className="text-2xl font-bold text-foreground mb-6">
             {t("favorite_villas")}
           </h2>

@@ -63,7 +63,7 @@ export default async function JeepListingPage({
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-[200px] sm:mt-[220px] md:mt-32">
         <PromoBanner text={t("promo_banner")} />
 
-        <div className="mt-12">
+        <div id="jeep-list-section" className="mt-12 scroll-mt-24">
           <h2 className="text-2xl font-bold text-foreground mb-6">
             {t("favorite_jeeps")}
           </h2>
