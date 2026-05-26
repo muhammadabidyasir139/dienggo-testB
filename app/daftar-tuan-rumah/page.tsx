@@ -618,7 +618,7 @@ export default function HostRegistrationPage() {
                     <h2 className="text-3xl font-black text-slate-900">
                       Tambahkan foto properti Anda
                     </h2>
-                    <p className="text-slate-500 mt-2">
+                    <p className="text-red-500 mt-2">
                       Minimal 5 foto untuk memberikan gambaran lengkap kepada
                       tamu.
                     </p>
