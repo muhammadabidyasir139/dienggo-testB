@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useState, useRef } from "react";
 import { LangToggle } from "./LangToggle";
-import { Menu, X, User, ShoppingBag, LogOut, ChevronDown, Home } from "lucide-react";
+import { Menu, X, ShoppingBag } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 
 export function Navbar() {
@@ -14,19 +14,11 @@ export function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const userMenuRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
 
   // Close menus on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        userMenuRef.current &&
-        !userMenuRef.current.contains(e.target as Node)
-      ) {
-        setUserMenuOpen(false);
-      }
       if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
         setMobileMenuOpen(false);
       }
@@ -44,8 +36,6 @@ export function Navbar() {
 
   const navBgClass = "bg-white/95 backdrop-blur-md shadow-sm border-b border-neutral-200";
   const textColorClass = "text-neutral-800";
-
-  const userInitial = session?.user?.name?.[0]?.toUpperCase() || "U";
 
   return (
     <header
@@ -96,82 +86,20 @@ export function Navbar() {
           </Link>
 
           {session ? (
-            session.user.role === "admin" ? (
-              <div className="flex items-center gap-3">
-                <Link
-                  href="/admin"
-                  className="rounded-xl bg-primary px-5 py-2 text-sm font-bold text-white transition-all hover:bg-primary/95"
-                >
-                  Dashboard
-                </Link>
-                <button
-                  onClick={() => signOut({ callbackUrl: "/villa" })}
-                  className="text-sm font-bold px-4 py-2 rounded-xl transition-all border border-red-200 text-red-600 hover:bg-red-50 cursor-pointer"
-                >
-                  Keluar
-                </button>
-              </div>
-            ) : (
-              /* User Menu Dropdown */
-              <div className="relative" ref={userMenuRef}>
-                <button
-                  onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-2 rounded-full bg-primary/10 pl-1 pr-3 py-1 text-sm font-semibold transition-all hover:bg-primary/20 cursor-pointer"
-                >
-                  <span className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm">
-                    {userInitial}
-                  </span>
-                  <span
-                    className="max-w-[100px] truncate text-foreground"
-                  >
-                    {session.user.name?.split(" ")[0] || "User"}
-                  </span>
-                  <ChevronDown
-                    size={14}
-                    className={`transition-transform ${userMenuOpen ? "rotate-180" : ""} text-neutral-500`}
-                  />
-                </button>
-
-                {userMenuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-neutral-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                    <div className="px-4 py-3 border-b border-neutral-100">
-                      <p className="text-sm font-bold text-foreground truncate">
-                        {session.user.name}
-                      </p>
-                      <p className="text-xs text-neutral-400 truncate">
-                        {session.user.email}
-                      </p>
-                    </div>
-                    <Link
-                      href="/dashboard/pesanan"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
-                    >
-                      <ShoppingBag size={16} className="text-neutral-400" />
-                      Pesanan Saya
-                    </Link>
-                    <Link
-                      href="/dashboard/pengajuan"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
-                    >
-                      <Home size={16} className="text-neutral-400" />
-                      {t("my_registrations")}
-                    </Link>
-                    <button
-                      onClick={() => {
-                        setUserMenuOpen(false);
-                        signOut({ callbackUrl: "/villa" });
-                      }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
-                    >
-                      <LogOut size={16} />
-                      Keluar
-                    </button>
-                  </div>
-                )}
-              </div>
-            )
+            <div className="flex items-center gap-3">
+              <Link
+                href={session.user.role === "admin" ? "/admin" : "/dashboard"}
+                className="rounded-xl bg-primary px-5 py-2 text-sm font-bold text-white transition-all hover:bg-primary/95"
+              >
+                Dashboard
+              </Link>
+              <button
+                onClick={() => signOut({ callbackUrl: "/villa" })}
+                className="text-sm font-bold px-4 py-2 rounded-xl transition-all border border-red-200 text-red-600 hover:bg-red-50 cursor-pointer"
+              >
+                Keluar
+              </button>
+            </div>
           ) : (
             <Link
               href="/login"
@@ -222,29 +150,13 @@ export function Navbar() {
 
           {session?.user ? (
             <div className="mx-4 flex flex-col gap-2">
-              {session.user.role === "admin" ? (
-                <Link
-                  href="/admin"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-center rounded-lg bg-primary py-3 font-semibold text-white mb-2"
-                >
-                  Dashboard
-                </Link>
-              ) : (
-                <div className="flex items-center gap-3 px-4 py-3 bg-neutral-50 rounded-lg">
-                  <span className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shrink-0">
-                    {userInitial}
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-sm font-bold text-foreground truncate">
-                      {session.user.name}
-                    </p>
-                    <p className="text-xs text-neutral-400 truncate">
-                      {session.user.email}
-                    </p>
-                  </div>
-                </div>
-              )}
+              <Link
+                href={session.user.role === "admin" ? "/admin" : "/dashboard"}
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-center rounded-lg bg-primary py-3 font-semibold text-white mb-2"
+              >
+                Dashboard
+              </Link>
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
