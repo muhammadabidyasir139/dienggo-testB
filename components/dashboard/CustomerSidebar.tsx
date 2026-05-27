@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ShoppingBag, Newspaper, User, LogOut } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, Newspaper, User, LogOut, Home } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 
@@ -13,6 +13,7 @@ export function CustomerSidebar() {
     const menuItems = [
         { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
         { href: "/dashboard/pesanan", label: "Pesanan Saya", icon: ShoppingBag },
+        { href: "/dashboard/pengajuan", label: "Pengajuan Saya", icon: Home },
         { href: "/dashboard/berita", label: "Berita", icon: Newspaper },
         { href: "/dashboard/profil", label: "Profil Saya", icon: User },
     ];
